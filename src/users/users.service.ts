@@ -44,9 +44,13 @@ export class UsersService {
     }
   }
 
-  // update(id: number, updateUserInput: UpdateUserInput) {
-  //   throw new Error('Method not implemented.');
-  // }
+  async findOneById(id: string): Promise<User> {
+    try {
+      return await this.userRepository.findOneByOrFail({ id });
+    } catch (error) {
+      throw new NotFoundException(`${id} not found`);
+    }
+  }
 
   async block(id: string): Promise<User> {
     throw new Error('Method not implemented.');
