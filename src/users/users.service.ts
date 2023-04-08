@@ -10,6 +10,8 @@ import { SignupInput } from '../auth/dto/inputs/signup.input';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
+import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UsersService {
@@ -32,8 +34,20 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return [];
+  async findAll(roles: ValidRoles[]): Promise<User[]> {
+    if (roles.length === 0)
+      return this.userRepository.find({
+        //Todo: no es necesario porque tenemos lazy la propiedad lastUpdateBy
+        // relations: {
+        //   lastUpdateBy: true,
+        // },
+      });
+
+    return this.userRepository
+      .createQueryBuilder()
+      .andWhere('ARRAY[roles] && ARRAY[:...roles]')
+      .setParameter('roles', roles)
+      .getMany();
   }
 
   async findOneByEmail(email: string): Promise<User> {
@@ -52,8 +66,28 @@ export class UsersService {
     }
   }
 
-  async block(id: string): Promise<User> {
-    throw new Error('Method not implemented.');
+  async update(
+    id: string,
+    updateUserInput: UpdateUserInput,
+    updateBy: User,
+  ): Promise<User> {
+    try {
+      const user = await this.userRepository.preload({
+        ...updateUserInput,
+        id,
+      });
+      user.lastUpdateBy = updateBy;
+      return await this.userRepository.save(user);
+    } catch (error) {
+      this.handleDBErrors(error);
+    }
+  }
+
+  async block(id: string, adminUser: User): Promise<User> {
+    const userToBlock = await this.findOneById(id);
+    userToBlock.isActive = false;
+    userToBlock.lastUpdateBy = adminUser;
+    return await this.userRepository.save(userToBlock);
   }
 
   private handleDBErrors(error: any): never {
