@@ -27,6 +27,9 @@ input LoginInput {
 type Mutation {
   blockUser(id: ID!): User!
   createItem(createItemInput: CreateItemInput!): Item!
+
+  """Ejecuta la construccion de la base de datos"""
+  executeSeed: Boolean!
   login(loginInput: LoginInput!): AuthResponse!
   removeItem(id: ID!): Item!
   signup(signupInput: SignupInput!): AuthResponse!
