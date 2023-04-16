@@ -67,6 +67,7 @@ type User {
   fullName: String!
   id: ID!
   isActive: Boolean!
+  itemCount: Int!
   items: [Item!]!
   lastUpdateBy: User
   roles: [String!]!

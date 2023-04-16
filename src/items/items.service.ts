@@ -40,7 +40,12 @@ export class ItemsService {
     return item;
   }
 
-  async update(id: string, updateItemInput: UpdateItemInput): Promise<Item> {
+  async update(
+    id: string,
+    updateItemInput: UpdateItemInput,
+    user: User,
+  ): Promise<Item> {
+    await this.findOne(id, user);
     const item = await this.itemsRepository.preload(updateItemInput);
     if (!item) throw new NotFoundException(`Item with id ${id} not found`);
     return await this.itemsRepository.save(item);
@@ -51,5 +56,11 @@ export class ItemsService {
     const item = await this.findOne(id, user);
     await this.itemsRepository.remove(item);
     return { ...item, id };
+  }
+
+  async itemCountByUser(user: User): Promise<number> {
+    return await this.itemsRepository.count({
+      where: { user: { id: user.id } },
+    });
   }
 }
