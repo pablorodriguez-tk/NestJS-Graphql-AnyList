@@ -39,7 +39,7 @@ type Mutation {
 
 type Query {
   item(id: ID!): Item!
-  items: [Item!]!
+  items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
   revalidate: AuthResponse!
   user(id: ID!): User!
   users(roles: [ValidRoles!] = []): [User!]!
