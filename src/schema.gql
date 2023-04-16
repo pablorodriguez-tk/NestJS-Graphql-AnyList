@@ -71,7 +71,7 @@ type User {
   id: ID!
   isActive: Boolean!
   itemCount: Int!
-  items: [Item!]!
+  items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
   lastUpdateBy: User
   roles: [String!]!
 }
