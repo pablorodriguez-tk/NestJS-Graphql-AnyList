@@ -16,8 +16,14 @@ input CreateListInput {
   name: String!
 }
 
+input CreateListItemInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Item {
   id: ID!
+  listItems: [ListItem!]!
   name: String!
   quantityUnits: String
   user: User!
@@ -25,8 +31,16 @@ type Item {
 
 type List {
   id: ID!
+  listItems: [ListItem!]!
   name: String!
   user: User!
+}
+
+type ListItem {
+  completed: Boolean!
+  id: ID!
+  item: Item!
+  quantity: Int!
 }
 
 input LoginInput {
@@ -38,15 +52,18 @@ type Mutation {
   blockUser(id: ID!): User!
   createItem(createItemInput: CreateItemInput!): Item!
   createList(createListInput: CreateListInput!): List!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
 
   """Ejecuta la construccion de la base de datos"""
   executeSeed: Boolean!
   login(loginInput: LoginInput!): AuthResponse!
   removeItem(id: ID!): Item!
   removeList(id: ID!): List!
+  removeListItem(id: Int!): ListItem!
   signup(signupInput: SignupInput!): AuthResponse!
   updateItem(updateItemInput: UpdateItemInput!): Item!
   updateList(updateListInput: UpdateListInput!): List!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
@@ -54,6 +71,7 @@ type Query {
   item(id: ID!): Item!
   items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
   list(id: ID!): List!
+  listItem(id: Int!): ListItem!
   lists(limit: Int = 10, offset: Int = 0, search: String): [List!]!
   revalidate: AuthResponse!
   user(id: ID!): User!
@@ -75,6 +93,12 @@ input UpdateItemInput {
 input UpdateListInput {
   id: ID!
   name: String
+}
+
+input UpdateListItemInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input UpdateUserInput {
