@@ -12,10 +12,20 @@ input CreateItemInput {
   quantityUnits: String
 }
 
+input CreateListInput {
+  name: String!
+}
+
 type Item {
   id: ID!
   name: String!
   quantityUnits: String
+  user: User!
+}
+
+type List {
+  id: ID!
+  name: String!
   user: User!
 }
 
@@ -27,19 +37,24 @@ input LoginInput {
 type Mutation {
   blockUser(id: ID!): User!
   createItem(createItemInput: CreateItemInput!): Item!
+  createList(createListInput: CreateListInput!): List!
 
   """Ejecuta la construccion de la base de datos"""
   executeSeed: Boolean!
   login(loginInput: LoginInput!): AuthResponse!
   removeItem(id: ID!): Item!
+  removeList(id: ID!): List!
   signup(signupInput: SignupInput!): AuthResponse!
   updateItem(updateItemInput: UpdateItemInput!): Item!
+  updateList(updateListInput: UpdateListInput!): List!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Query {
   item(id: ID!): Item!
   items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
+  list(id: ID!): List!
+  lists(limit: Int = 10, offset: Int = 0, search: String): [List!]!
   revalidate: AuthResponse!
   user(id: ID!): User!
   users(roles: [ValidRoles!] = []): [User!]!
@@ -55,6 +70,11 @@ input UpdateItemInput {
   id: ID!
   name: String
   quantityUnits: String
+}
+
+input UpdateListInput {
+  id: ID!
+  name: String
 }
 
 input UpdateUserInput {
@@ -73,6 +93,8 @@ type User {
   itemCount: Int!
   items(limit: Int = 10, offset: Int = 0, search: String): [Item!]!
   lastUpdateBy: User
+  listCount: Int!
+  lists(limit: Int = 10, offset: Int = 0, search: String): [List!]!
   roles: [String!]!
 }
 

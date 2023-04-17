@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateItemInput, UpdateItemInput } from './dto/inputs';
 import { Item } from './entities/item.entity';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { PaginationArgs, SearchArgs } from '../common/dto/args';
@@ -24,8 +24,6 @@ export class ItemsService {
     paginationArgs: PaginationArgs,
     searchArgs: SearchArgs,
   ): Promise<Item[]> {
-    //TODO: filtar , paginar
-
     const { offset, limit } = paginationArgs;
     const { search } = searchArgs;
 

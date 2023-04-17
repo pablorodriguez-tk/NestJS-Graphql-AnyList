@@ -18,7 +18,6 @@ export class ItemsResolver {
     @Args('createItemInput') createItemInput: CreateItemInput,
     @CurrentUser() user: User,
   ): Promise<Item> {
-    console.log(user);
     return this.itemsService.create(createItemInput, user);
   }
 
@@ -48,7 +47,7 @@ export class ItemsResolver {
   }
 
   @Mutation(() => Item)
-  removeItem(
+  async removeItem(
     @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
     @CurrentUser() user: User,
   ): Promise<Item> {
